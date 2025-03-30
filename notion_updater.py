@@ -13,9 +13,9 @@ utc_now = datetime.utcnow().isoformat()
 pages = notion.databases.query(database_id=DATABASE_ID)["results"]
 
 for page in pages:
-    page_id = page["id"]
+    print("Updating page:", page["id"]) 
     notion.pages.update(
-        page_id=page_id,
+        page_id=page["id"],
         properties={
             "Now_UTC": {
                 "date": {
