@@ -1,29 +1,19 @@
-# notion_updater.py
-
 from notion_client import Client
-from datetime import datetime, timezone
+from datetime import datetime
 import os
 
+# 从 GitHub Secret 中读取
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 DATABASE_ID = os.getenv("DATABASE_ID")
 
 notion = Client(auth=NOTION_TOKEN)
 
+utc_now = datetime.utcnow().isoformat()
 
-utc_now = datetime.now(timezone.utc).isoformat()
-
-print("📡 Using DATABASE_ID:", DATABASE_ID)
-print("🕒 Current UTC Time:", utc_now)
-
-
-response = notion.databases.query(database_id=DATABASE_ID)
-pages = response["results"]
-
+pages = notion.databases.query(database_id=DATABASE_ID)["results"]
 
 for page in pages:
     page_id = page["id"]
-    print("🔄 Updating page:", page_id)
-
     notion.pages.update(
         page_id=page_id,
         properties={
@@ -35,4 +25,4 @@ for page in pages:
         }
     )
 
-print("✅ All pages updated with UTC time:", utc_now)
+print("✅ Updated Now_UTC to", utc_now)
