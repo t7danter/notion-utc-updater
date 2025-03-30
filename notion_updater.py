@@ -1,40 +1,32 @@
-# notion_updater.py
-
 from notion_client import Client
-from datetime import datetime, timezone
 import os
-
 
 NOTION_TOKEN = os.environ["NOTION_TOKEN"]
 DATABASE_ID = os.environ["DATABASE_ID"]
 
-
 notion = Client(auth=NOTION_TOKEN)
 
+# 获取页面列表
+pages = notion.databases.query(database_id=DATABASE_ID)["results"]
 
-utc_now = datetime.now(timezone.utc).isoformat()
+print("Pages found:", len(pages))
 
-print("📡 Using DATABASE_ID:", DATABASE_ID)
-print("🕒 Current UTC Time:", utc_now)
-
-
-response = notion.databases.query(database_id=DATABASE_ID)
-pages = response["results"]
-
-
+# 尝试更新第一个页面的 Test_Number = 1
 for page in pages:
     page_id = page["id"]
-    print("🔄 Updating page:", page_id)
+    print("📝 Updating page:", page_id)
 
-    notion.pages.update(
-        page_id=page_id,
-        properties={
-            "Now_UTC": {
-                "date": {
-                    "start": utc_now
+    try:
+        notion.pages.update(
+            page_id=page_id,
+            properties={
+                "Test_Number": {
+                    "number": 1
                 }
             }
-        }
-    )
-
-print("✅ All pages updated with UTC time:", utc_now)
+        )
+        print(f"✅ Successfully updated page: {page_id}")
+        break  # 只改一条测试
+    except Exception as e:
+        print(f"❌ Failed to update page {page_id}: {e}")
+        continue
