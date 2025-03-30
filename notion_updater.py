@@ -13,6 +13,7 @@ utc_now = datetime.utcnow().isoformat()
 pages = notion.databases.query(database_id=DATABASE_ID)["results"]
 
 for page in pages:
+    print("Using DATABASE_ID:", DATABASE_ID)
     print("Updating page:", page["id"]) 
     notion.pages.update(
         page_id=page["id"],
