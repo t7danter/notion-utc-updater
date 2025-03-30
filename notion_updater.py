@@ -26,4 +26,3 @@ for page in pages:
     )
 
 print("✅ Updated Now_UTC to", utc_now)
-print("Using DATABASE_ID:", DATABASE_ID)
